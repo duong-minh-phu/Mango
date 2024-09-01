@@ -13,18 +13,22 @@ namespace Mango.Services.CouponAPI.Controllers
     {
         private readonly AppDbContext _db;
         private ResponseDto _response;
-        public MangoController(AppDbContext db)
+        private IMapper _mapper;
+
+        public CouponAPIController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
             _response = new ResponseDto();
         }
+
         [HttpGet]
-        public object Get() {
+        public ResponseDto Get()
+        {
             try
             {
                 IEnumerable<Coupon> objList = _db.Coupons.ToList();
-                _response.Result = objList;
-                _response.Message = "succesfull";
+                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
             }
             catch (Exception ex)
             {
@@ -33,15 +37,15 @@ namespace Mango.Services.CouponAPI.Controllers
             }
             return _response;
         }
+
         [HttpGet]
         [Route("{id:int}")]
-        public object Get(int id)
+        public ResponseDto Get(int id)
         {
             try
             {
-                Coupon objList = _db.Coupons.First(u=>u.CouponId==id);
-                _response.Result = objList;
-                _response.Message = "succesfull";
+                Coupon obj = _db.Coupons.First(u => u.CouponId == id);
+                _response.Result = _mapper.Map<CouponDto>(obj);
             }
             catch (Exception ex)
             {
@@ -50,5 +54,6 @@ namespace Mango.Services.CouponAPI.Controllers
             }
             return _response;
         }
+
     }
 }
