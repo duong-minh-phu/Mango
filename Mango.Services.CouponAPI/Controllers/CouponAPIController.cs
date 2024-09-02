@@ -1,15 +1,15 @@
-﻿using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Model;
+﻿using AutoMapper;
+using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Model.DTO;
+using Mango.Services.CouponAPI.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MangoController : ControllerBase
+    public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
         private ResponseDto _response;
@@ -28,7 +28,7 @@ namespace Mango.Services.CouponAPI.Controllers
             try
             {
                 IEnumerable<Coupon> objList = _db.Coupons.ToList();
-                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
+                _response.Result = _mapper.Map<IEnumerable<CouponDTO>>(objList);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace Mango.Services.CouponAPI.Controllers
             try
             {
                 Coupon obj = _db.Coupons.First(u => u.CouponId == id);
-                _response.Result = _mapper.Map<CouponDto>(obj);
+                _response.Result = _mapper.Map<CouponDTO>(obj);
             }
             catch (Exception ex)
             {
@@ -55,5 +55,21 @@ namespace Mango.Services.CouponAPI.Controllers
             return _response;
         }
 
+        [HttpGet]
+        [Route("GetByCode/{code}")]
+        public ResponseDto GetByCode(string code)
+        {
+            try
+            {
+                Coupon obj = _db.Coupons.First(u => u.CouponCode.ToLower() == code.ToLower());
+                _response.Result = _mapper.Map<CouponDTO>(obj);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
     }
 }
