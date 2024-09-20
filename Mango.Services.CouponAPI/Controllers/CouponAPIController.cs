@@ -101,7 +101,9 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {   
-                if (_db.Coupons.First(u => u.CouponId == id) == null) { return null; }
+                if (_db.Coupons.First(u => u.CouponId == id) == null) { 
+                    
+                    return null; }
                 Coupon obj = _mapper.Map<Coupon>(couponDto);
                 _db.Coupons.Update(obj);
                 _db.SaveChanges();
