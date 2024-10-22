@@ -1,4 +1,4 @@
-﻿using Mango.Web.Model;
+﻿using Mango.Services.CouponAPI.Models.Dto;
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
@@ -12,8 +12,8 @@ namespace Mango.Web.Service
         {
             _baseService = baseService;
         }
-        //aaaaa
-        public async Task<ResponseDto?> CreateCouponsAsync(CouponDTO couponDto)
+
+        public async Task<ResponseDto?> CreateCouponsAsync(CouponDto couponDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
@@ -59,7 +59,7 @@ namespace Mango.Web.Service
             });
         }
 
-        public async Task<ResponseDto?> UpdateCouponsAsync(CouponDTO couponDto)
+        public async Task<ResponseDto?> UpdateCouponsAsync(CouponDto couponDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
