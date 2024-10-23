@@ -28,27 +28,14 @@ namespace Mango.Web.Controllers
             LoginRequestDto loginRequestDto = new();
             return View(loginRequestDto);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginRequestDto obj)
+        [HttpGet]
+        public IActionResult Register()
         {
-            ResponseDto responseDto = await _authService.LoginAsync(obj);
-
-            if (responseDto != null && responseDto.IsSuccess)
-            {
-                LoginResponseDto loginResponseDto =
-                    JsonConvert.DeserializeObject<LoginResponseDto>(Convert.ToString(responseDto.Result));
-
-                
-
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                TempData["error"] = responseDto.Message;
-                return View(obj);
-            }
+            RegistrationRequestDto loginRequestDto = new();
+            return View(loginRequestDto);
         }
+
+
 
 
 
