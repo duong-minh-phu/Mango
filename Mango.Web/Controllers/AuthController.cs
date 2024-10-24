@@ -28,11 +28,78 @@ namespace Mango.Web.Controllers
             LoginRequestDto loginRequestDto = new();
             return View(loginRequestDto);
         }
+
+
+
+        [HttpPost]        
+        public async Task<IActionResult> Login(LoginRequestDto obj)
+        {
+            ResponseDto responseDto = await _authService.LoginAsync(obj);
+
+            if (responseDto != null && responseDto.IsSuccess)
+            {
+                LoginResponseDto loginResponseDto =
+                    JsonConvert.DeserializeObject<LoginResponseDto>(Convert.ToString(responseDto.Result));
+
+               
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("CustomError", responseDto.Message);
+                return View(obj);
+            }
+        }
+
+
         [HttpGet]
         public IActionResult Register()
         {
-            RegistrationRequestDto loginRequestDto = new();
-            return View(loginRequestDto);
+            var roleList = new List<SelectListItem>()
+            {
+                new SelectListItem{Text=SD.RoleAdmin,Value=SD.RoleAdmin},
+                new SelectListItem{Text=SD.RoleCustomer,Value=SD.RoleCustomer},
+            };
+
+            ViewBag.RoleList = roleList;
+            return View();
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegistrationRequestDto obj)
+        {
+            ResponseDto result = await _authService.RegisterAsync(obj);
+            ResponseDto assingRole;
+
+            if (result != null && result.IsSuccess)
+            {
+                if (string.IsNullOrEmpty(obj.Role))
+                {
+                    obj.Role = SD.RoleCustomer;
+                }
+                assingRole = await _authService.AssignRoleAsync(obj);
+                if (assingRole != null && assingRole.IsSuccess)
+                {
+                    TempData["success"] = "Registration Successful";
+                    return RedirectToAction(nameof(Login));
+                }
+            }
+            else
+            {
+                TempData["error"] = result.Message;
+            }
+
+            var roleList = new List<SelectListItem>()
+            {
+                new SelectListItem{Text=SD.RoleAdmin,Value=SD.RoleAdmin},
+                new SelectListItem{Text=SD.RoleCustomer,Value=SD.RoleCustomer},
+            };
+
+            ViewBag.RoleList = roleList;
+            return View(obj);
         }
 
 
