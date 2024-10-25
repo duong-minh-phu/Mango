@@ -42,7 +42,7 @@ namespace Mango.Web.Controllers
                 LoginResponseDto loginResponseDto =
                     JsonConvert.DeserializeObject<LoginResponseDto>(Convert.ToString(responseDto.Result));
 
-                //_tokenProvider.SetToken(loginResponseDto.Token);
+                _tokenProvider.SetToken(loginResponseDto.Token);
                 return RedirectToAction("Index", "Home");
             }
             else
