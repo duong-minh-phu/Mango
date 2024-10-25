@@ -2,6 +2,7 @@
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Mango.Web.Service
 {
@@ -19,8 +20,8 @@ namespace Mango.Web.Service
             {
                 ApiType = SD.ApiType.POST,
                 Data = couponDto,
-                Url = SD.CouponAPIBase + "/api/coupon"
-            });
+                Url = SD.CouponAPIBase + "/api/coupon" + couponDto
+            }) ;
         }
 
         public async Task<ResponseDto?> DeleteCouponsAsync(int id)
